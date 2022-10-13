@@ -1,6 +1,7 @@
 .venv/
 .vscode/
 .mypy_cache
+.pytest_cache
 
 __pycache__
 docs/slides
