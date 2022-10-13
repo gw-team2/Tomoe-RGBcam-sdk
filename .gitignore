@@ -1,7 +1,9 @@
 .venv/
 .vscode/
+.mypy_cache
 
 __pycache__
 docs/slides
+docs/sdk_manual
 
 *.avi
