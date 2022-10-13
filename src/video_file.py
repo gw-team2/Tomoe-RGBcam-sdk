@@ -14,9 +14,11 @@ class VideoFiler:
         self._filer.video_file_format = eval(self._cfg.video.file_format)
         self._filer.video_file_compression = eval(self._cfg.video.file_compression)
 
-        self._filer.register_filename(
-            os.path.join(self._cfg.video.dest_dir, f"{filename}")
-        )
+        stem, suffix = os.path.splitext(filename)
+        for file_index in range(self._cfg.video.num_video_files):
+            self._filer.register_filename(
+                os.path.join(self._cfg.video.dest_dir, f"{stem}_{file_index}" + suffix)
+            )
 
     def register_callback(self, callback, info):
         self._filer.register_callback(callback, info)
