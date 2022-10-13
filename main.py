@@ -12,6 +12,8 @@ import time
 
 import stapipy as st
 
+from src.video_file import VideoFile
+
 # Number of images to grab
 number_of_images_to_grab = 100
 
@@ -62,28 +64,15 @@ if __name__ == "__main__":
         if acquisition_frame_rate:
             fps = acquisition_frame_rate.value
 
-        # Create PyStVideoFiler
-        st_videofiler: st.PyStVideoFiler = st.create_filer(st.EStFilerType.Video)
-
-        # Register a callback function.
+        video_filer = VideoFile()
         callback_info = {"error": False}
-        videofiler_cb = st_videofiler.register_callback(
-            videofiler_callback, callback_info
-        )
-
-        # Configure the video file settings.
-        st_videofiler.maximum_frame_count_per_file = maximum_frame_count_per_file
-        st_videofiler.video_file_format = st.EStVideoFileFormat.AVI2
-        st_videofiler.video_file_compression = st.EStVideoFileCompression.MotionJPEG
-        st_videofiler.fps = fps
+        video_filer.register_callback(videofiler_callback, callback_info)
 
         # Register video files
         filename_prefix = st_device.info.display_name
         for file_index in range(video_files_count):
-            # file_location = os.path.join(tempfile.gettempdir(),
-            #                          filename_prefix + str(file_index) + ".avi")
             file_location = os.path.join(filename_prefix + str(file_index) + ".avi")
-            st_videofiler.register_filename(file_location)
+            video_filer.register_filename(file_location)
 
         # Create a datastream object for handling image stream data.
         st_datastream: st.PyStDataStream = st_device.create_datastream()
@@ -127,7 +116,7 @@ if __name__ == "__main__":
                         frame_no = int(tmp + 0.5)
 
                     # Add the image data to video file.
-                    st_videofiler.register_image(st_image, frame_no)
+                    video_filer.register_image(st_image, frame_no)
                 else:
                     # If the acquired data contains no image data.
                     print("Image data does not exist.")
