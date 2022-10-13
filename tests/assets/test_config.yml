@@ -1,0 +1,12 @@
+camera:
+  index: 0
+
+video:
+  dest_dir: output
+  fps: 10
+  max_frames_per_file: 20
+  file_format: st.EStVideoFileFormat.AVI2
+  file_compression: st.EStVideoFileCompression.MotionJPEG
+
+stream:
+  buffer_size: 100
