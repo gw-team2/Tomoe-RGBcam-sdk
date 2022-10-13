@@ -40,18 +40,18 @@ class Recorder:
     def bufffer_size(self):
         return self._cfg.stream.buffer_size
 
-    def __init__(self, cfg: DictConfig) -> None:
+    def __init__(self, cfg: DictConfig, filename: str) -> None:
         """
         Args:
             file_dest (str): video file path to save
             num_to_acquire (int): Number of buffers to retrieve.
         """
         self._cfg = cfg
+        self._filename = filename
 
     def start(self, camera_index: Optional[int] = None):
         try:
             st.initialize()
-            self._video_filer = VideoFiler(self._cfg, "test-video.avi")
             self._system: st.PyStSystem = st.create_system()
 
             if camera_index:
@@ -60,6 +60,9 @@ class Recorder:
                 )
             else:
                 self._camera_device: st.PyStDevice = self._system.create_first_device()
+
+            self._video_filer = VideoFiler(self._cfg, self._filename)
+            self._video_filer.register_callback(videofiler_callback, self.callback_info)
 
             self._datastream: st.PyStDataStream = (
                 self._camera_device.create_datastream()
