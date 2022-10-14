@@ -11,7 +11,7 @@
     pip install numpy
     pip install opencv-python
 """
-
+import os
 from datetime import datetime
 
 import cv2
@@ -54,15 +54,17 @@ class Recorder:
 
         self._datastream = self._device.create_datastream()
 
+    def get_video_path(self):
+        dest_dir = self._cfg.video.dest_dir
+        timestamp = datetime.now().strftime("%y-%m-%d_%H-%M-%S")
+        return os.path.join(dest_dir, timestamp + ".avi")
+
     def grab(self):
         try:
-            timestamp = datetime.now().strftime("%y-%m-%d_%H-%M-%S")
+            video_path = self.get_video_path()
             codec = cv2.VideoWriter_fourcc("I", "4", "2", "0")
             self._writer = cv2.VideoWriter(
-                f"{timestamp}.avi",
-                codec,
-                self.fps,
-                (self.frame_width, self.frame_height),
+                video_path, codec, self.fps, (self.frame_width, self.frame_height)
             )
 
             self._datastream.start_acquisition(self.num_grabs)
@@ -98,7 +100,6 @@ class Recorder:
 
         self._device.acquisition_stop()
         self._datastream.stop_acquisition()
-        # st.terminate()
 
     def _convert(self, cap_img):
         # Check the pixelformat of the input image.
