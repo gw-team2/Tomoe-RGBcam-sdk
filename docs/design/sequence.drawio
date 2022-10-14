@@ -1,9 +1,57 @@
 <mxfile host="65bd71144e">
     <diagram id="r7t_rm0VNv2tYe7t5kmp" name="ページ1">
-        <mxGraphModel dx="1291" dy="910" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="490" dy="628" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
+                <mxCell id="8" value="loop" style="shape=umlFrame;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="632" y="408" width="170" height="133" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Recoder" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="666" y="286" width="100" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="2">
+                    <mxGeometry x="45" y="84" width="10" height="162" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="capture()" style="edgeStyle=none;html=1;" edge="1" parent="2">
+                    <mxGeometry x="-0.0333" y="25" relative="1" as="geometry">
+                        <mxPoint x="55" y="138.0000000000001" as="sourcePoint"/>
+                        <mxPoint x="55" y="158.0000000000001" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="75" y="138"/>
+                            <mxPoint x="75" y="158"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="write()" style="edgeStyle=none;html=1;" edge="1" parent="2">
+                    <mxGeometry y="19" relative="1" as="geometry">
+                        <mxPoint x="55" y="191" as="sourcePoint"/>
+                        <mxPoint x="55" y="211" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="72" y="191"/>
+                            <mxPoint x="72" y="211"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="Scheduler" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="546" y="286" width="100" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="4">
+                    <mxGeometry x="45" y="78" width="10" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="4">
+                    <mxGeometry x="45" y="217" width="10" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="start()" style="edgeStyle=none;html=1;" edge="1" parent="1" source="5" target="7">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="711" y="403.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="stop()" style="edgeStyle=none;html=1;" edge="1" parent="1" source="10" target="7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
