@@ -4,6 +4,6 @@ camera:
 video:
   dest_dir: output
   fps: 5
-  seconds: 10
+  seconds: 5
   width: 1920  # FIXED
   height: 1200  # FIXED

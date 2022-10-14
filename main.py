@@ -1,14 +1,10 @@
-import threading
+from omegaconf import OmegaConf
 
-from grab_opencv import record
-
-
-def run_threaded(job_func):
-    job_thread = threading.Thread(target=job_func)
-    job_thread.start()
-
+from recorder import Recorder
 
 if __name__ == "__main__":
+    cfg = OmegaConf.load("config.yml")
+    rec = Recorder(cfg)
 
     while True:
-        record()
+        rec.grab()
