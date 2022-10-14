@@ -3,7 +3,7 @@ camera:
 
 video:
   dest_dir: output
-  fps: 5
-  seconds: 5
+  fps: 3
+  seconds: 2700 # 45 minutes equals 2700[sec]
   width: 1920  # FIXED
   height: 1200  # FIXED
