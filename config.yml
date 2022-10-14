@@ -3,10 +3,9 @@ camera:
 
 video:
   dest_dir: output
-  fps: 10
-  max_frames_per_file: 20
+  fps: 5
+  seconds: 10
   file_format: st.EStVideoFileFormat.AVI2
   file_compression: st.EStVideoFileCompression.MotionJPEG
-
-stream:
-  buffer_size: 100
+  width: 1920  # FIXED
+  height: 1200  # FIXED

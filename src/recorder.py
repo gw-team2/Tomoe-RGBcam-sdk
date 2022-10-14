@@ -1,28 +1,11 @@
 import datetime
+import os
 from typing import Optional
 
+import cv2
+import numpy as np
 import stapipy as st
 from omegaconf import DictConfig
-
-from .video_file import VideoFiler
-
-
-def videofiler_callback(handle=None, context=None):
-    """
-    Callback to handle events from Video Filer.
-
-    :param handle: handle that trigger the callback.
-    :param context: user data passed on during callback registration.
-    """
-    callback_type = handle.callback_type
-    videofiler = handle.module
-    if callback_type == st.EStCallbackType.StApiIPVideoFilerOpen:
-        print("Open:", handle.data["filename"])
-    elif callback_type == st.EStCallbackType.StApiIPVideoFilerClose:
-        print("Close:", handle.data["filename"])
-    elif callback_type == st.EStCallbackType.StApiIPVideoFilerError:
-        print("Error:", handle.error[1])
-        context["error"] = True
 
 
 class Recorder:
@@ -48,6 +31,11 @@ class Recorder:
         """
         self._cfg = cfg
         self._filename = filename
+        path = os.path.join(self.file_dest_dir, filename)
+        codec = cv2.VideoWriter_fourcc("I", "4", "2", "0")
+        self._video = cv2.VideoWriter(
+            path, codec, self.fps, (self._cfg.video.width, self._cfg.video.height)
+        )
 
     def start(self, camera_index: Optional[int] = None):
         try:
@@ -61,9 +49,6 @@ class Recorder:
             else:
                 self._camera_device: st.PyStDevice = self._system.create_first_device()
 
-            self._video_filer = VideoFiler(self._cfg, self._filename)
-            self._video_filer.register_callback(videofiler_callback, self.callback_info)
-
             self._datastream: st.PyStDataStream = (
                 self._camera_device.create_datastream()
             )
@@ -71,8 +56,6 @@ class Recorder:
 
             self._camera_device.acquisition_start()
 
-            first_frame = True
-            first_timestamp = 0
             while self._datastream.is_grabbing:
 
                 if self.callback_info["error"]:
@@ -91,20 +74,11 @@ class Recorder:
                                 self._datastream.current_fps,
                             )
                         )
+                        data = st_image.get_image_data()
+                        nparr = np.frombuffer(data, np.uint8)
+                        nparr = nparr.reshape(st_image.height, st_image.width)
+                        self._video.write(nparr)
 
-                        # Calculate frame number in case of frame drop.
-                        frame_no = 0
-                        current_timestamp = st_buffer.info.timestamp
-                        if first_frame:
-                            first_frame = False
-                            first_timestamp = current_timestamp
-                        else:
-                            delta = current_timestamp - first_timestamp
-                            tmp = delta * self.fps / 1000000000.0
-                            frame_no = int(tmp + 0.5)
-
-                        # Add the image data to video file.
-                        self._video_filer.register_image(st_image, frame_no)
                     else:
                         # If the acquired data contains no image data.
                         print("Image data does not exist.")
@@ -115,5 +89,6 @@ class Recorder:
             print(exception)
 
     def stop(self):
+        self._video.release()
         self._camera_device.acquisition_stop()
         self._datastream.stop_acquisition()
