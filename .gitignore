@@ -9,3 +9,5 @@ docs/sdk_manual
 docs/design/functional_requirements.md
 
 *.avi
+tmp/
+tmp.*
