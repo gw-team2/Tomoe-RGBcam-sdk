@@ -55,7 +55,7 @@ class Recorder:
 
         self._datastream = self._device.create_datastream()
 
-    def get_video_path(self):
+    def _get_video_path(self):
         dest_dir = self._cfg.video.dest_dir
         timestamp = datetime.now().strftime("%y-%m-%d_%H-%M-%S")
         return os.path.join(dest_dir, timestamp + ".avi")
@@ -75,7 +75,7 @@ class Recorder:
             File path of recorded video.
         """
         try:
-            video_path = self.get_video_path()
+            video_path = self._get_video_path()
             codec = cv2.VideoWriter_fourcc("I", "4", "2", "0")
             self._writer = cv2.VideoWriter(
                 video_path, codec, self.fps, (self.frame_width, self.frame_height)
