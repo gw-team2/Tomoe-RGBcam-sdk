@@ -106,7 +106,10 @@ class Recorder:
             print(exception)
 
         finally:
-            self.stop()
+            self._writer.release()
+            cv2.destroyAllWindows()
+            self._postprocess_record()
+
             return video_path
 
     def shot(self) -> Union[np.ndarray, None]:
@@ -131,12 +134,6 @@ class Recorder:
         finally:
             self._postprocess_record()
             return nparr
-
-    def stop(self):
-        self._writer.release()
-        cv2.destroyAllWindows()
-
-        self._postprocess_record()
 
     def _convert(self, cap_img):
         # Check the pixelformat of the input image.
