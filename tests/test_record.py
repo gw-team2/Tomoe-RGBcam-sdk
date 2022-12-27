@@ -1,10 +1,11 @@
 import tempfile
 
-from src.recorder import Recorder
 
-
-def test_record(test_config):
+def test_record(test_config, recorder):
     with tempfile.TemporaryDirectory() as tmpd:
         test_config.video.dest_dir = tmpd
-        recorder = Recorder(test_config, "test-movie.avi")
-        recorder.start()
+        _ = recorder.record()
+
+
+def test_shot(recorder):
+    _ = recorder.shot()
