@@ -11,4 +11,4 @@ if __name__ == "__main__":
     rec = Recorder(cfg)
 
     while True:
-        rec.grab()
+        _ = rec.record()

@@ -13,6 +13,7 @@
 """
 import os
 from datetime import datetime
+from typing import Union
 
 import cv2
 import numpy as np
@@ -59,7 +60,20 @@ class Recorder:
         timestamp = datetime.now().strftime("%y-%m-%d_%H-%M-%S")
         return os.path.join(dest_dir, timestamp + ".avi")
 
-    def grab(self):
+    def _preprocess_record(self, num_grabs: int):
+        self._datastream.start_acquisition(num_grabs)
+        self._device.acquisition_start()
+
+    def _postprocess_record(self):
+        self._device.acquisition_stop()
+        self._datastream.stop_acquisition()
+
+    def record(self) -> str:
+        """
+        Record video and save video file.
+        Returns:
+            File path of recorded video.
+        """
         try:
             video_path = self.get_video_path()
             codec = cv2.VideoWriter_fourcc("I", "4", "2", "0")
@@ -67,8 +81,7 @@ class Recorder:
                 video_path, codec, self.fps, (self.frame_width, self.frame_height)
             )
 
-            self._datastream.start_acquisition(self.num_grabs)
-            self._device.acquisition_start()
+            self._preprocess_record(self.num_grabs)
 
             while self._datastream.is_grabbing:
                 with self._datastream.retrieve_buffer() as st_buffer:
@@ -93,13 +106,36 @@ class Recorder:
 
         finally:
             self.stop()
+            return video_path
+
+    def shot(self) -> Union[np.ndarray, None]:
+        """
+        Capture image.
+        Returns:
+            image: np.ndarray. if failed to capture a image, this function returns null.
+        """
+
+        try:
+            self._preprocess_record(1)
+            with self._datastream.retrieve_buffer() as st_buffer:
+                if st_buffer.info.is_image_present:
+                    cap_img = st_buffer.get_image()
+                    nparr = self._convert(cap_img)
+                else:
+                    nparr = None
+
+        except Exception as exception:
+            print(exception)
+
+        finally:
+            self._postprocess_record()
+            return nparr
 
     def stop(self):
         self._writer.release()
         cv2.destroyAllWindows()
 
-        self._device.acquisition_stop()
-        self._datastream.stop_acquisition()
+        self._postprocess_record()
 
     def _convert(self, cap_img):
         # Check the pixelformat of the input image.
@@ -136,5 +172,6 @@ class Recorder:
                 nparr = cv2.cvtColor(nparr, cv2.COLOR_BAYER_GB2RGB)
             elif bayer_type == st.EStPixelColorFilter.BayerBG:
                 nparr = cv2.cvtColor(nparr, cv2.COLOR_BAYER_BG2RGB)
-
+        else:
+            nparr = nparr[:, :, ::-1]  # BGR -> RGB
         return nparr
