@@ -2,7 +2,7 @@ import os
 
 from omegaconf import OmegaConf
 
-from recorder import Recorder
+from src.recorder import Recorder
 
 if __name__ == "__main__":
 
