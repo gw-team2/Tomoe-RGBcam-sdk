@@ -1,4 +1,4 @@
-# RB Camera SDK
+# RGB Camera SDK
 
 ---
 ## setup
