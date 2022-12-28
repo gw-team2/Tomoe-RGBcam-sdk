@@ -43,6 +43,10 @@ class Recorder:
     def num_grabs(self):
         return self.fps * self.video_seconds
 
+    @property
+    def is_grabbing(self) -> bool:
+        return self._datastream.is_grabbing
+
     def __init__(self, cfg: DictConfig) -> None:
         self._cfg = cfg
         st.initialize()

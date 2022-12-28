@@ -17,7 +17,11 @@ app = FastAPI()
 
 @app.post("/api/record/start")
 def start_record():
-    pass
+    if Recorder.is_grabbing:
+        # Retrun failed recording response
+        pass
+    else:
+        pass
 
 
 @app.post("/api/record/stop")
